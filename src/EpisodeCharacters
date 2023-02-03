@@ -1,0 +1,54 @@
+import React, { useState, useEffect } from 'react';
+import EpisodeCharacters from './EpisodeCharacters';
+import Character from './Character';
+
+
+
+export default function EpisodeCharacters({ episodeId }) {
+    const [characters, setCharacters] = useState(null);
+
+    useEffect(() => {
+        fetch(`https://rickandmortyapi.com/api/episode/${episodeId}`)
+            .then(response => response.json())
+            .then(data => {
+                const charactersUrls = data.characters;
+                const charactersPromises = charactersUrls.map(url => fetch(url));
+                Promise.all(charactersPromises)
+                    .then(responses => Promise.all(responses.map(response => response.json())))
+                    .then(charactersData => {
+                        setCharacters(charactersData);
+                    }
+                );
+            });
+    }, [episodeId]);
+
+    return (
+        <div>
+            {characters && characters.map(character => (
+                <div key={character.id}>
+                    <img src={character.image} alt={character.name} className='character-icon rounded-circle'/>
+                    {character.name}
+                </div>
+            ))}
+        </div>
+    );
+}
+
+
+
+const [characters, setCharacters] = useState(null);
+
+    useEffect(() => {
+        fetch(`https://rickandmortyapi.com/api/episode/${episodeId}`)
+            .then(response => response.json())
+            .then(data => {
+                const charactersUrls = data.characters;
+                const charactersPromises = charactersUrls.map(url => fetch(url));
+                Promise.all(charactersPromises)
+                    .then(responses => Promise.all(responses.map(response => response.json())))
+                    .then(charactersData => {
+                        setCharacters(charactersData);
+                    }
+                );
+            });
+    }, [episodeId]);
